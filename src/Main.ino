@@ -31,8 +31,8 @@ PushButton Bp_B = PushButton(3);   //Bp choix bleu
 #define Cto_B // barriere cour open
 #define Ctc_B // barriere cour close
 
-#define Aig_A // aiguille voie A
-#define Aig_B // aiguille voie B
+const int Aig_A = 8; // aiguille voie A
+const int Aig_B = 9; // aiguille voie B
 
 #define Pts_B // secteur voie B
 #define Pts_C // secteur voie C
@@ -42,14 +42,18 @@ PushButton Bp_B = PushButton(3);   //Bp choix bleu
 
 
 //------ Led ------//
-
+Blinker BkR(5); // clignotement Led Rose
+Blinker BkB(6); // clignotement Led Bleu
 
 //------ Boolean ------//
+boolean Cmd = false; // Choix couleur
 boolean MdR = false; // Mode Rose
 boolean MdB = false; // Mode Bleu
 
-Blinker BkR(5);
-Blinker BkB(6);
+enum posAig {
+  voieA,
+  voieB
+};
 
 void setup()
 {
@@ -64,6 +68,9 @@ void setup()
   BkB.setDelay(250);
   BkB.start();
 
+  pinMode(Aig_A, OUTPUT);
+  pinMode(Aig_B, OUTPUT);
+
 }
 
 void loop()
@@ -71,35 +78,84 @@ void loop()
     Bp_R.update();
     Bp_B.update();
 
-    BkR.blink();
-    BkB.blink();
+    /*BkR.blink();
+    BkB.blink();*/
 }
 
 void onBp_RPressed(Button& btn)
 {
-  MdR = true;
+  /*MdR = true;
 
-  if (!MdR || !MdB)
+  if (!Cmd)
   {
-  	Serial.println("Bp_R pressed");
+    Cmd = true;
+
+    Serial.println("Choix PQ Rose");
     BkR.stop();
     BkB.stop();
 
-    digitalWrite(5, HIGH);
+    BkR.on();
+  }*/
+  if (CmdAiguille(voieA));
+  {
+    Serial.println("Manoeuvre Aig Reusie");
   }
 }
 
 void onBp_BPressed(Button& btn)
 {
-  MdB = true;
+  /*MdB = true;
 
-  if (!MdR || !MdB)
+  if (!Cmd)
   {
-  Serial.println("Bp_B pressed");
-  BkR.stop();
-  BkB.stop();
+    Cmd = true;
 
-  digitalWrite(6, HIGH);
+    Serial.println("Choix PQ Bleu");
+    BkR.stop();
+    BkB.stop();
+
+    BkB.on();
+  }*/
+  if (CmdAiguille(voieB));
+  {
+    Serial.println("Manoeuvre Aig Reusie");
+  }
 }
 
+bool CmdAiguille(posAig ps)
+{
+  if (ps==voieA)
+  {
+    if (digitalRead(Aig_A) == HIGH)
+    {
+      Serial.println("position Voie A");
+      return true;
+    }
+    else
+    {
+      while (digitalRead(Aig_A) == LOW)
+      {
+        Serial.println("aiguille => Voie A");
+      }
+      return true;
+    }
+    return false;
+  }
+  else if (ps==voieB)
+  {
+    if (digitalRead(Aig_B) == HIGH)
+    {
+      Serial.println("position Voie B");
+      return true;
+    }
+    else
+    {
+      while (digitalRead(Aig_B) == LOW)
+      {
+        Serial.println("aiguille => Voie B");
+      }
+      return true;
+    }
+    return false;
+  }
 }
