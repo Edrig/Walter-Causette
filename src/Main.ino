@@ -34,9 +34,9 @@ PushButton Bp_B = PushButton(3);   //Bp choix bleu
 const int Aig_A = 8; // aiguille voie A
 const int Aig_B = 9; // aiguille voie B
 
-#define Pts_B // secteur voie B
-#define Pts_C // secteur voie C
-#define Pts_D // secteur voie D
+const int Pts_B = 10; // secteur voie B
+const int Pts_C = 11;// secteur voie C
+const int Pts_D = 12;// secteur voie D
 
 //------ Actionneur ------//
 
@@ -53,6 +53,12 @@ boolean MdB = false; // Mode Bleu
 enum posAig {
   voieA,
   voieB
+};
+
+enum posSect {
+  voieBs,
+  voieCs,
+  voieDs
 };
 
 void setup()
@@ -75,16 +81,16 @@ void setup()
 
 void loop()
 {
-    Bp_R.update();
-    Bp_B.update();
+  Bp_R.update();
+  Bp_B.update();
 
-    /*BkR.blink();
-    BkB.blink();*/
+  BkR.blink();
+  BkB.blink();
 }
 
 void onBp_RPressed(Button& btn)
 {
-  /*MdR = true;
+  MdR = true;
 
   if (!Cmd)
   {
@@ -95,16 +101,17 @@ void onBp_RPressed(Button& btn)
     BkB.stop();
 
     BkR.on();
-  }*/
-  if (CmdAiguille(voieA));
-  {
-    Serial.println("Manoeuvre Aig Reusie");
   }
+
+  /*if (CmdAiguille(voieA));
+  {
+  Serial.println("Manoeuvre Aig voieA Reusie");
+}*/
 }
 
 void onBp_BPressed(Button& btn)
 {
-  /*MdB = true;
+  MdB = true;
 
   if (!Cmd)
   {
@@ -115,17 +122,20 @@ void onBp_BPressed(Button& btn)
     BkB.stop();
 
     BkB.on();
-  }*/
-  if (CmdAiguille(voieB));
-  {
-    Serial.println("Manoeuvre Aig Reusie");
   }
+
+  /*if (CmdAiguille(voieB));
+  {
+  Serial.println("Manoeuvre Aig VoieB Reusie");
+}*/
 }
 
 bool CmdAiguille(posAig ps)
 {
-  if (ps==voieA)
+  switch (ps)
   {
+    case voieA:
+
     if (digitalRead(Aig_A) == HIGH)
     {
       Serial.println("position Voie A");
@@ -140,9 +150,10 @@ bool CmdAiguille(posAig ps)
       return true;
     }
     return false;
-  }
-  else if (ps==voieB)
-  {
+    break;
+
+    case voieB:
+
     if (digitalRead(Aig_B) == HIGH)
     {
       Serial.println("position Voie B");
@@ -157,5 +168,15 @@ bool CmdAiguille(posAig ps)
       return true;
     }
     return false;
+
+    break;
+  }
+}
+
+bool CmdSect(posSect ps)
+{
+  if (ps==voieBs)
+  {
+
   }
 }
