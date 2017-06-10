@@ -1,14 +1,17 @@
-#include <Button.h>
-#include <ButtonEventCallback.h>
-#include <PushButton.h>
-#include <Bounce2.h>
+//#include <Button.h>
+//#include <ButtonEventCallback.h>
+//#include <PushButton.h>
+//#include <Bounce2.h>
 
 #include <Blinker.h>
+#include "OneButton.h"
 
 //------ BP choix couleur ------//
 
-PushButton Bp_R = PushButton(2);  //Bp choix rose
-PushButton Bp_B = PushButton(3);   //Bp choix bleu
+OneButton Bp_R(A1, true);
+OneButton Bp_B(A2, true);
+//PushButton Bp_R = PushButton(2);  //Bp choix rose
+//PushButton Bp_B = PushButton(3);   //Bp choix bleu
 
 //------ Inverseur mode ------//
 #define IntF_R //Inter force mode rose
@@ -50,6 +53,12 @@ boolean Cmd = false; // Choix couleur
 boolean MdR = false; // Mode Rose
 boolean MdB = false; // Mode Bleu
 
+//----- Memoire -----/
+int LastStep = 0;
+char LastPos_Aig = 'A';
+char LastPos_Sect = 'C';
+
+
 enum posAig {
   voieA,
   voieB
@@ -65,8 +74,10 @@ void setup()
 {
   Serial.begin(115200);
 
-  Bp_R.onPress(onBp_RPressed);
-  Bp_B.onPress(onBp_BPressed);
+  //Bp_R.onPress(onBp_RPressed);
+  //Bp_B.onPress(onBp_BPressed);
+  Bp_R.attachClick(onBp_R_Pressed)
+  Bp_B.attachClick(onBp_B_Pressed)
 
   BkR.setDelay(250);
   BkR.start();
@@ -81,14 +92,14 @@ void setup()
 
 void loop()
 {
-  Bp_R.update();
-  Bp_B.update();
+  Bp_R.tick();
+  Bp_B.tick()();
 
   BkR.blink();
   BkB.blink();
 }
 
-void onBp_RPressed(Button& btn)
+void onBp_R_Click()
 {
   MdR = true;
 
@@ -109,7 +120,7 @@ void onBp_RPressed(Button& btn)
 }*/
 }
 
-void onBp_BPressed(Button& btn)
+void onBp_B_Click()
 {
   MdB = true;
 
@@ -138,7 +149,8 @@ bool CmdAiguille(posAig ps)
 
     if (digitalRead(Aig_A) == HIGH)
     {
-      Serial.println("position Voie A");
+      LastPos_Aig == 'A';
+      Serial.println("position Aig Voie: " + posAig);
       return true;
     }
     else
@@ -156,7 +168,8 @@ bool CmdAiguille(posAig ps)
 
     if (digitalRead(Aig_B) == HIGH)
     {
-      Serial.println("position Voie B");
+      LastPos_Aig == 'B';
+      Serial.println("position Aig Voie: " + posAig);
       return true;
     }
     else
@@ -175,8 +188,38 @@ bool CmdAiguille(posAig ps)
 
 bool CmdSect(posSect ps)
 {
-  if (ps==voieBs)
+
+  switch ( ps )
   {
 
-  }
+    case voieBs:
+
+      if (digitalRead(Pts_B) == HIGH)
+      {
+        Serial.println("position Sect Voie Bs");
+
+      }
+      else
+      {
+
+      }
+      break;
+
+    case voieCs:
+      if (digitalRead(Pts_C) == HIGH)
+      {
+        Serial.println("position Sect Voie Cs");
+      }
+      else
+      {
+
+      }
+      break;
+
+    case voieDs:
+      if (digitalRead(Pts_D) == HIGH)
+      {
+        Serial.println("position Sect Voie Ds");
+      }
+      break;
 }
