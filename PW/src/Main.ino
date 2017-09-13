@@ -98,16 +98,16 @@ int AB_R4 = 0;
 int AB_B4 = 90;
 
 // Voie C-1
-int C_R1 = -30;
-int C_B1 = 0;
+int C_R1 = 0;
+int C_B1 = 30;
 
 // Voie C-2
-int C_R2 = -60;
-int C_B2 = 0;
+int C_R2 = -80;
+int C_B2 = 30;
 
 // Voie C-4
-int C_R4 = 90;
-int C_B4 = 90;
+int C_R4 = 80;
+int C_B4 = 0;
 
 enum Pos {
   AB_1,
@@ -118,6 +118,9 @@ enum Pos {
   C_4
 };
 
+int val = 0;
+int val2 = 0;
+int val3 = 0;
 
 int a(int val)
 {
@@ -128,8 +131,8 @@ int a(int val)
   }
   else
   {
-    int val2 = val - 90 ;
-    int val3 = - val2;
+    val2 = val - 90 ;
+    val3 = - val2;
     return val3;
   }
 }
@@ -208,8 +211,10 @@ void PosW (Pos pos)
       BkC_2.blink();
       break;
     case C_4:
-      SR.write(a(C_R4), 50);
-      SB.write(a(C_B4), 50);
+      SR.write(0, 50);
+      SB.write(110, 50);
+      //SR.write(a(C_R4), 50);
+      //SB.write(a(C_B4), 50);
 
       BkC_4.blink();
       break;
