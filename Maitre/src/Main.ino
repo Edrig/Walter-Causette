@@ -57,6 +57,8 @@ boolean Cmd = false; // Choix couleur
 boolean MdR = false; // Mode Rose
 boolean MdB = false; // Mode Bleu
 
+boolean Alv = false; // ALim Voie
+
 //----- Memoire -----//
 
 int t = 0;
@@ -317,7 +319,7 @@ void onIls_P_Pressed(Button& btn)
       t++;
       break;
   }
-}1
+}
 
 
 void onIls_AB_Pressed(Button& btn)

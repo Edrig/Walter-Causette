@@ -220,7 +220,6 @@ void PosW (Pos pos)
       break;
   }
   SR.wait();
-  SB.wait();
 
   Cmd = false;
   Led(pos);
@@ -230,8 +229,8 @@ void setup()
 {
 
   //Initialisation Broche Servo
-  SR.attach(9);
-  SB.attach(10);
+  SR.attach(10, 560, 2400);
+  //SB.attach(10);
 
   // Extinction Led position
 

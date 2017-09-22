@@ -34,7 +34,7 @@ void Bounce::attach(int pin) {
 
 void Bounce::attach(int pin, int mode){
   pinMode(pin, mode);
-  
+
   this->attach(pin);
 }
 
