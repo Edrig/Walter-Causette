@@ -1,3 +1,4 @@
+
 #include <Button.h>
 #include <ButtonEventCallback.h>
 #include <PushButton.h>
@@ -97,11 +98,16 @@ void setup()
   pinMode(AlimVL, OUTPUT);
   pinMode(AlimVR, OUTPUT);
 
+  pinMode(cmdAigA, OUTPUT);
+  pinMode(cmdAigB, OUTPUT);
+
   AlimV(zero);
 
   //digitalWrite(AlimVL, HIGH);
+  MdR = false;
   t = 0;
-
+  //Bp(cmdAigB);
+  //digitalWrite(cmdAigA, HIGH);
 }
 
 void loop()
@@ -186,19 +192,23 @@ void loop()
     Serial.println("case 11");
       //Pt AB-25°
       t++;
+      delay(6000);
       break;
     case 12:
     Serial.println("case 12");
       Bp(porteU);
+      t++;
+      delay(2000);
       break;
     case 13:
     Serial.println("case 13");
       //Attente position Pt
       //BMoteur Demarrage
+      AlimV(right);
       break;
     case 14:
     Serial.println("case 14");
-
+      AlimV(zero);
       break;
     case 15:
     Serial.println("case 15");
@@ -336,13 +346,19 @@ void onIls_AB_Pressed(Button& btn)
 void onIls_C_Pressed(Button& btn)
 {
   Serial.println("Ils loco-C");
+  switch (t)
+  {
+    case 13:
+      t++;
+      break;
+  }
 }
 
 void Bp(int s)
 {
   Serial.println("BP: "+ s);
   digitalWrite(s, HIGH);
-  delay(60);
+  delay(3000);
   digitalWrite(s, LOW);
 }
 

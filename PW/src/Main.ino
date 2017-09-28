@@ -68,9 +68,11 @@ PushButton Bp_AB_1 = PushButton (A0);  //Bp choix voie AB_1 Bois
 PushButton Bp_AB_2 = PushButton (A1);  //Bp choix voie AB_2 Rose
 PushButton Bp_AB_4 = PushButton (A2);  //Bp choix voie AB_4 Bleu
 
-PushButton Bp_C_1 = PushButton (A3);
-PushButton Bp_C_2 = PushButton (A4);
+PushButton Bp_C_1 = PushButton (A3);  // C_1
+PushButton Bp_C_2 = PushButton (A4);  // C_2
 PushButton Bp_C_4 = PushButton (A5);
+
+//  C_4
 
 //------ Led ------//
 Blinker BkAB_1(2);
@@ -86,28 +88,26 @@ boolean Cmd = false;
 
 
 // Voie AB-1
-int AB_R1 = 0;
-int AB_B1 = 0;
+int AB_R1 = 100;
 
 // Voie AB-2
-int AB_R2 = -90;
-int AB_B2 = 0;
+int AB_R2 = 4;
 
 // Voie AB-4
-int AB_R4 = 0;
-int AB_B4 = 90;
+int AB_R4 = 199;
 
 // Voie C-1
-int C_R1 = 0;
-int C_B1 = 30;
+int C_R1 = 132;
 
 // Voie C-2
-int C_R2 = -80;
-int C_B2 = 30;
+int C_R2 = 34;
 
 // Voie C-4
-int C_R4 = 80;
-int C_B4 = 0;
+int C_R4 = 231;
+
+
+// Servo Speed
+int speed = 10;
 
 enum Pos {
   AB_1,
@@ -181,45 +181,37 @@ void PosW (Pos pos)
   switch (pos)
   {
     case AB_1:
-      SR.write(a(AB_R1), 50);
-      SB.write(a(AB_B1), 50);
+      SR.write(AB_R1, speed, true);
 
       BkAB_1.blink();
       break;
     case AB_2:
-      SR.write(a(AB_R2), 50);
-      SB.write(a(AB_B2), 50);
+      SR.write(AB_R2, speed, true);
 
       BkAB_2.blink();
       break;
     case AB_4:
-      SR.write(a(AB_R4), 50);
-      SB.write(a(AB_B4), 50);
+      SR.write(AB_R4, speed, true);
 
       BkAB_4.blink();
       break;
     case C_1:
-      SR.write(a(C_R1), 50);
-      SB.write(a(C_B1), 50);
+      SR.write(C_R1, speed, true);
 
       BkC_1.blink();
       break;
     case C_2:
-      SR.write(a(C_R2), 50);
-      SB.write(a(C_B2), 50);
+      SR.write(C_R2, speed, true);
 
       BkC_2.blink();
       break;
     case C_4:
-      SR.write(0, 50);
-      SB.write(110, 50);
-      //SR.write(a(C_R4), 50);
-      //SB.write(a(C_B4), 50);
+      SR.write(C_R4, speed, true);
 
       BkC_4.blink();
       break;
   }
-  SR.wait();
+  //SR.wait();
 
   Cmd = false;
   Led(pos);
@@ -229,11 +221,9 @@ void setup()
 {
 
   //Initialisation Broche Servo
-  SR.attach(10, 560, 2400);
-  //SB.attach(10);
+  SR.attach(10, 560, 2400, 270);
 
   // Extinction Led position
-
   BkAB_1.start();
   BkAB_2.start();
   BkAB_4.start();
@@ -258,7 +248,7 @@ void setup()
   Bp_C_4.onPress(C_4Pressed);
 
 
-  PosW(AB_1);
+  PosW(C_1);
 
   Cmd = false;
 

@@ -20,15 +20,26 @@ const int servoPin = 10; // the digital pin used for the servo
 void setup() {
   Serial.begin(1152000); 
   myservo.attach(servoPin, 560, 2400, 270);  // attaches the servo on pin 9 to the servo object
-  //myservo.write(0,10,true); // set the intial position of the servo, as fast as possible, wait until done
+  myservo.write(132,10,true); // set the intial position of the servo, as fast as possible, wait until done
 } 
 
+  /* AB_1 = 100
+     AB_2 = 4
+     AB_4 = 198
+
+     C_1 = 132
+     C_2 = 34
+     C_4 = 229
+    */
 void loop() {
-  myservo.write(0, 10, true);
-  delay(600);
-  myservo.write(90,10,true);        // move the servo to 180, max speed, wait until done
-  delay(500);                                    // write(degrees 0-180, speed 1-255, wait to complete true-false)
-  myservo.write(180,10,true);           // move the servo to 180, slow speed, wait until done*/
-  delay(500);
-  myservo.write(270,10,true);
-} 
+  myservo.write(132, 10, true);
+  delay(2000);
+  myservo.write(100,10,true);        // move the servo to 180, max speed, wait until done
+  delay(2000);                                    // write(degrees 0-180, speed 1-255, wait to complete true-false)
+  myservo.write(132,10,true);           // move the servo to 180, slow speed, wait until done
+  delay(2000);
+  myservo.write(4,10,true);
+  delay(2000);
+  //myservo.write(4,10,true);
+  //delay(2000);*/
+}
