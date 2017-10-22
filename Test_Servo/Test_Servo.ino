@@ -30,7 +30,7 @@ void loop()
         
         //on modifie la consigne du servo
         monServo.writeMicroseconds(temps);
-        
+        monServo.detach();        
         //et on fait un retour sur la console pour savoir où on est rendu
         Serial.println(temps, DEC);
     }

@@ -63,14 +63,14 @@ VarSpeedServo SR; //servo Rose
 VarSpeedServo SB; //servo bleu
 
 //------ BP choix couleur ------//
+// 2 0 1 5 3 4
+PushButton Bp_AB_1 = PushButton (A3);  //Bp choix voie AB_1 Bois
+PushButton Bp_AB_2 = PushButton (A5);  //Bp choix voie AB_2 Rose
+PushButton Bp_AB_4 = PushButton (A4);  //Bp choix voie AB_4 Bleu
 
-PushButton Bp_AB_1 = PushButton (A0);  //Bp choix voie AB_1 Bois
-PushButton Bp_AB_2 = PushButton (A1);  //Bp choix voie AB_2 Rose
-PushButton Bp_AB_4 = PushButton (A2);  //Bp choix voie AB_4 Bleu
-
-PushButton Bp_C_1 = PushButton (A3);  // C_1
-PushButton Bp_C_2 = PushButton (A4);  // C_2
-PushButton Bp_C_4 = PushButton (A5);
+PushButton Bp_C_1 = PushButton (A0);  // C_1 B
+PushButton Bp_C_2 = PushButton (A2);  // C_2 R
+PushButton Bp_C_4 = PushButton (A1); // C_4  B
 
 //  C_4
 
@@ -96,18 +96,22 @@ int AB_R2 = 4;
 // Voie AB-4
 int AB_R4 = 199;
 
-// Voie C-1
-int C_R1 = 132;
+// Voie C- 1
+int C_R1 = 131;
 
 // Voie C-2
 int C_R2 = 34;
 
 // Voie C-4
-int C_R4 = 231;
+int C_R4 = 230;
 
 
 // Servo Speed
 int speed = 10;
+
+
+int PigeE = 4;
+int PigeS = 5;
 
 enum Pos {
   AB_1,
@@ -122,6 +126,8 @@ int val = 0;
 int val2 = 0;
 int val3 = 0;
 
+Pos oldPos = C_1;
+
 int a(int val)
 {
 
@@ -135,6 +141,18 @@ int a(int val)
     val3 = - val2;
     return val3;
   }
+}
+
+
+void Bp(int s)
+{
+  //Serial.println("BP: ");
+  //Serial.print(s);
+  digitalWrite(s, HIGH);
+  delay(600);
+  digitalWrite(s, LOW);
+  //delay(4000);
+  //Serial.println("Test");
 }
 
 void Led (Pos pos)
@@ -178,6 +196,13 @@ void PosW (Pos pos)
   BkC_2.off();
   BkC_4.off();
   Cmd = true;
+
+  /*if (pos != oldPos)
+  {*/
+  Bp(PigeE);
+  delay(2000);
+  //}
+
   switch (pos)
   {
     case AB_1:
@@ -211,7 +236,9 @@ void PosW (Pos pos)
       BkC_4.blink();
       break;
   }
-  //SR.wait();
+
+  Bp(PigeS);
+  delay(2000);
 
   Cmd = false;
   Led(pos);
@@ -219,6 +246,8 @@ void PosW (Pos pos)
 
 void setup()
 {
+
+  Serial.begin(115200);
 
   //Initialisation Broche Servo
   SR.attach(10, 560, 2400, 270);
@@ -247,6 +276,14 @@ void setup()
   Bp_C_2.onPress(C_2Pressed);
   Bp_C_4.onPress(C_4Pressed);
 
+  pinMode(PigeE, OUTPUT);
+  pinMode(PigeS, OUTPUT);
+
+
+  Bp(PigeE);
+  delay(2000);
+
+  //digitalWrite(5, HIGH);
 
   PosW(C_1);
 
@@ -263,6 +300,18 @@ void setup()
 
 void loop()
 {
+  /*PosW(AB_1);
+  delay(600);
+  PosW(AB_2);
+  delay(600);
+  PosW(AB_4);
+  delay(600);
+  PosW(C_1);
+  delay(600);
+  PosW(C_2);
+  delay(600);
+  PosW(C_4);
+  delay(600);*/
   if (!Cmd)
   {
 
