@@ -74,6 +74,7 @@ enum AlimVoie {
 void setup()
 {
   Serial.begin(115200);
+  Serial.print("Walter&Causette Debug\n");
 
   Bp_R.onPress(onBp_RPressed);
   Bp_B.onPress(onBp_BPressed);
