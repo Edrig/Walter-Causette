@@ -73,6 +73,7 @@ PushButton Bp_C_2 = PushButton (A2);  // C_2 R
 PushButton Bp_C_4 = PushButton (A1); // C_4  B
 
 PushButton Bp_Z = PushButton (10); //BP init Zero
+PushButton Bp0 = PushButton(11);
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -95,22 +96,22 @@ boolean Cmd = false;
 
 
 // Voie AB-1
-int AB_R1 = 75; //Bois
+int AB_R1 = 0; //Bois
 
 // Voie AB-2
-int AB_R2 = 125; //Rose
+int AB_R2 = 0; //Rose
 
 // Voie AB-4
-int AB_R4 = 25; //BLeu
+int AB_R4 = 0; //BLeu
 
 // Voie C- 1
-int C_R1 = 50; //Bois
+int C_R1 = 0; //Bois
 
 // Voie C-2
-int C_R2 = 100; //Rose
+int C_R2 = 51; //Rose
 
 // Voie C-4
-int C_R4 = 0; //Bleu
+int C_R4 = 151; //Bleu
 
 
 int chemin;
@@ -280,8 +281,9 @@ void CheckZero()
 {
     while(!CheckZ)
     {
-      myMotor->step(1, FORWARD, MICROSTEP);
+      //myMotor->step(1, FORWARD, DOUBLE);
       Bp_Z.update();
+      //Bp0.update();
     }
 }
 
@@ -292,7 +294,7 @@ void setup()
 
   AFMS.begin();
 
-  myMotor->setSpeed(10);
+  //myMotor->setSpeed(10);
 
   // Extinction Led position
   BkAB_1.start();
@@ -319,6 +321,7 @@ void setup()
   Bp_C_4.onPress(C_4Pressed);
 
   Bp_Z.onPress(Z_Pressed);
+  Bp0.onPress(Bp_Pressed);
 
   PosW(C_1);
 
@@ -330,11 +333,12 @@ void setup()
   delay(600);
   PosW(C_4);*/
 
-  CheckZero();
+  //CheckZero();
 }
 
 void loop()
 {
+  //Bp_Z.update();
   /*PosW(AB_1);
   delay(600);
   PosW(AB_2);
@@ -358,6 +362,7 @@ void loop()
     Bp_C_2.update();
     Bp_C_4.update();
 
+    Bp_Z.update();
   }
 
 }
@@ -393,6 +398,14 @@ void C_4Pressed(Button& btn)
 }
 
 void Z_Pressed(Button& btn)
+{
+
+  Serial.println("Bp");
+  myMotor->step(1, FORWARD, MICROSTEP);
+  //CheckZ = true;
+}
+
+void Bp_Pressed(Button& btn)
 {
   CheckZ = true;
 }
