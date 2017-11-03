@@ -1,54 +1,9 @@
 /* SCRIPT Rotation de la Plaque Wagon:
 Principe : La PW est constituée de 4 voies perpendiculaires les unes aux autres, donc en croix.
-Elle est chargée avec 3 wagons, Bois, PQ Rose et PQ Bleu. La 4° est vide
+Elle est chargée avec 3 wagons, Bois(1), PQ Rose(2) et PQ Bleu(4). La 3° est vide
 Le Loco vient récupérer le wagon Bois, le dépose à l'usine de PQ.
 Il ressort de l'usine avec le wagon de PQ de la couleur choisie par le spectateur.
 Il retourne en gare déposer le wagon.
-
-Initialisation : A l'initialisation, la PW se met en position 1 qui correspond à:
-voie Bois callée par rapport à la voie C, ce sera la référence, le point 0, P1. Ce qui fait qu'il n'y a pas de voie en face de la voie AB.
-(sens de rotation: + correspond au sens horaire)
-
-Séquence :
-Dès que le loco est arrivé devant la PW, ILS envoie info au Maître. Le Maître envoie ordre de fabrication.
-rotation de de la PW de + 27° pour accrocher le wagon Bois, soit P2. (bien que l'angle soit de 27.5°)
-L'ordre est alors donné au Maître pour le départ du convoi, et la rotation de la PW de - 27° pour réceptionner le wagon Bois sur la voie C.
-Sur la voie C, le loco en arrivant devant la PW, déclanche l'ILS qui donne l'info au Maître pour déclancher la suite des opérations.
-On est donc revenu au point de référence P1.
-
-
-Si le choix est PQ Rose:
-Le Maître envoie une information pour la rotation de la PW
-rotation de + 90° pour accrocher le wagon PQ Rose voie C, soit P3. Ordre est donné au maître pour le départ du convoi.
-Le Maître envoie l'info de mise en place de la PW pour réceptionner le wagon sur la voie AB
-rotation de + 27° soit + 117° ( 90° + 27° ) pour réceptionner le wagon PQ Rose soit P4.
-rotation de - 27° pour décrocher le wagon PQ Rose soit P3,
-ordre est donné pour le départ du loco,
-rotation de - 90° pour revenir en position initiale, 0° soit P0.
-
-Si le choix est PQ Bleu:
-rotation de - 90° pour accrocher le wagon PQ Bleu voie C, soit P5. Ordre est donné au maître pour le départ du convoi.
-rotation de + 27° soit - 63° ( - 90° + 27°) pour réceptionner le wagon sur la voie AB soit P6.
-rotation de - 27° pour décrocher le wagon soit P5,
-ordre est donné pour le départ du loco
-rotation de + 90° pour revenir en position initiale 0° soit P0.
-
-
-Les positions angulaires:
-Position 1 = 0°, référence, wagon Bois sur voie C
-Position 2 = +27°, wagon Bois sur voie AB
-Position 3 = +90°, wagon PQ Rose sur voie C
-Position 4 = +117°, wagon PQ Rose sur voie AB
-Position 5 = -90°, wagon PQ Bleu sur voie C
-Position 6 = -63°, wagon PQ Bleu sur voie AB
-Les angles sont ici théoriques, en fait, il convient de réajuster en fonction de chaque servo. C'est le pourquoi de la différence dans le programme.
-
-Les Servos:
-Les servos sont limitées en débattement à 120°, ce qui est insuffisant pour réaliser la rotation totale de 207°
-Le principe est de relier par leurs structures 2 servos têtes bêches, fixées sur la plaque de base pour l'une et sur la pW pour l'autre.
-L'une réalise le débattement pour le PQ Rose, l'autre pour le PQ Bleu. Il convient entre les 2 débattements Rose et Bleu, de les ramener
-au point de référence afin d'obtenir l'angle souhaité dans le programme. L'une tourne dans le sens horaire, l'autre dans le sens anti-horaire.
-
 */
 
 #include <Button.h>
@@ -73,7 +28,8 @@ PushButton Bp_C_2 = PushButton (A2);  // C_2 R
 PushButton Bp_C_4 = PushButton (A1); // C_4  B
 
 PushButton Bp_Z = PushButton (10); //BP init Zero
-PushButton Bp0 = PushButton(11);
+PushButton BpP = PushButton(4); //Bp Deplacement -
+PushButton BpM = PushButton(5); //Bp Deplacement +
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -82,7 +38,7 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // to motor port #2 (M3 and M4)
 Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 
-//------ Led ------//
+//----------- Led -----------//
 Blinker BkAB_1(2);
 Blinker BkAB_2(3);
 Blinker BkAB_4(4);
@@ -91,9 +47,10 @@ Blinker BkC_1(5);
 Blinker BkC_2(6);
 Blinker BkC_4(7);
 
-//------ Boolean ------//
+//-------- Boolean --------//
 boolean Cmd = false;
 
+//------ Pos plaque ------//
 
 // Voie AB-1
 int AB_R1 = 0; //Bois
@@ -112,6 +69,10 @@ int C_R2 = 51; //Rose
 
 // Voie C-4
 int C_R4 = 151; //Bleu
+
+//------ Retour Com ------//
+
+//int Rm = ;
 
 
 int chemin;
@@ -238,21 +199,21 @@ void GotoPos(int posDest)
     int chemin1 = posDest - posCour;
     int chemin2;
     if (posDest > posCour)
-      chemin2 = - (posCour + 200 - posDest);
+    chemin2 = - (posCour + 200 - posDest);
     else
-      chemin2 = 200 - posCour + posDest;
+    chemin2 = 200 - posCour + posDest;
 
     int chemin;
     if (abs(chemin1) > abs(chemin2))
-      chemin = chemin2;
+    chemin = chemin2;
     else
-      chemin = chemin1;
+    chemin = chemin1;
 
     /* Si chemin < 0, la direction est mise à 1 */
     if (chemin < 0)
-      dir = true;
+    dir = true;
     else
-      dir = false;
+    dir = false;
 
     if (chemin != 0)
     {
@@ -279,12 +240,12 @@ void GotoPos(int posDest)
 
 void CheckZero()
 {
-    while(!CheckZ)
-    {
-      //myMotor->step(1, FORWARD, DOUBLE);
-      Bp_Z.update();
-      //Bp0.update();
-    }
+  while(!CheckZ)
+  {
+    //myMotor->step(1, FORWARD, DOUBLE);
+    Bp_Z.update();
+    //Bp0.update();
+  }
 }
 
 void setup()
@@ -321,7 +282,7 @@ void setup()
   Bp_C_4.onPress(C_4Pressed);
 
   Bp_Z.onPress(Z_Pressed);
-  Bp0.onPress(Bp_Pressed);
+  BpP.onPress(BpP_Pressed);
 
   PosW(C_1);
 
@@ -400,12 +361,12 @@ void C_4Pressed(Button& btn)
 void Z_Pressed(Button& btn)
 {
 
+  CheckZ = true;
   Serial.println("Bp");
-  myMotor->step(1, FORWARD, MICROSTEP);
   //CheckZ = true;
 }
 
-void Bp_Pressed(Button& btn)
+void BpP_Pressed(Button& btn)
 {
-  CheckZ = true;
+  myMotor->step(1, FORWARD, MICROSTEP);
 }
