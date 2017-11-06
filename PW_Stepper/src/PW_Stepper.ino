@@ -19,13 +19,13 @@ Il retourne en gare déposer le wagon.
 
 //------ BP choix couleur ------//
 // 2 0 1 5 3 4
-PushButton Bp_AB_1 = PushButton (A3);  //Bp choix voie AB_1 Bois
-PushButton Bp_AB_2 = PushButton (A5);  //Bp choix voie AB_2 Rose
-PushButton Bp_AB_4 = PushButton (A4);  //Bp choix voie AB_4 Bleu
+PushButton Bp_AB_1 = PushButton (A2);  //Bp choix voie AB_1 Bois
+PushButton Bp_AB_2 = PushButton (A0);  //Bp choix voie AB_2 Rose
+PushButton Bp_AB_4 = PushButton (A1);  //Bp choix voie AB_4 Bleu
 
-PushButton Bp_C_1 = PushButton (A0);  // C_1 B
-PushButton Bp_C_2 = PushButton (A2);  // C_2 R
-PushButton Bp_C_4 = PushButton (A1); // C_4  B
+PushButton Bp_C_1 = PushButton (A5);  // C_1 B
+PushButton Bp_C_2 = PushButton (A3);  // C_2 R
+PushButton Bp_C_4 = PushButton (A4); // C_4  B
 
 PushButton Bp_Z = PushButton (10); //BP init Zero
 PushButton BpP = PushButton(4); //Bp Deplacement -
@@ -39,13 +39,13 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_StepperMotor *myMotor = AFMS.getStepper(200, 2);
 
 //----------- Led -----------//
-Blinker BkAB_1(2);
-Blinker BkAB_2(3);
-Blinker BkAB_4(4);
+//Blinker BkAB_1(11);
+//Blinker BkAB_2(12);
+//Blinker BkAB_4(13);
 
-Blinker BkC_1(5);
-Blinker BkC_2(6);
-Blinker BkC_4(7);
+//Blinker BkC_1(7);
+//Blinker BkC_2(8);
+//Blinker BkC_4(9);
 
 //-------- Boolean --------//
 boolean Cmd = false;
@@ -53,27 +53,28 @@ boolean Cmd = false;
 //------ Pos plaque ------//
 
 // Voie AB-1
-int AB_R1 = 0; //Bois
+int AB_R1 = 47; //Bois
 
 // Voie AB-2
-int AB_R2 = 0; //Rose
+int AB_R2 = 197; //Rose
 
 // Voie AB-4
-int AB_R4 = 0; //BLeu
+int AB_R4 = 498; //BLeu
 
 // Voie C- 1
 int C_R1 = 0; //Bois
 
 // Voie C-2
-int C_R2 = 51; //Rose
+int C_R2 = 150; //Rose
 
 // Voie C-4
-int C_R4 = 151; //Bleu
+int C_R4 = 450; //Bleu
 
 //------ Retour Com ------//
 
 //int Rm = ;
 
+int pos = 0;
 
 int chemin;
 bool dir;
@@ -105,7 +106,7 @@ void Bp(int s)
   //Serial.println("Test");
 }
 
-void Led (Pos pos)
+/*void Led (Pos pos)
 {
   BkAB_1.off();
   BkAB_2.off();
@@ -135,16 +136,16 @@ void Led (Pos pos)
     BkC_4.on();
     break;
   }
-}
+}*/
 
 void PosW (Pos pos)
 {
-  BkAB_1.off();
+  /*BkAB_1.off();
   BkAB_2.off();
   BkAB_4.off();
   BkC_1.off();
   BkC_2.off();
-  BkC_4.off();
+  BkC_4.off();*/
   Cmd = true;
 
   switch (pos)
@@ -154,54 +155,54 @@ void PosW (Pos pos)
     //myMotor->step(AB_R1,FORWARD,MICROSTEP);
     GotoPos(AB_R1);
 
-    BkAB_1.blink();
+    //BkAB_1.blink();
     break;
     case AB_2:
     //SR.write(AB_R2, speed, true);
     GotoPos(AB_R2);
 
-    BkAB_2.blink();
+    //BkAB_2.blink();
     break;
     case AB_4:
     //SR.write(AB_R4, speed, true);
     GotoPos(AB_R4);
 
-    BkAB_4.blink();
+    //BkAB_4.blink();
     break;
     case C_1:
     //SR.write(C_R1, speed, true);
     GotoPos(C_R1);
 
-    BkC_1.blink();
+    //BkC_1.blink();
     break;
     case C_2:
     //SR.write(C_R2, speed, true);
     GotoPos(C_R2);
 
-    BkC_2.blink();
+    //BkC_2.blink();
     break;
     case C_4:
     //SR.write(C_R4, speed, true);
     GotoPos(C_R4);
 
-    BkC_4.blink();
+    //BkC_4.blink();
     break;
   }
-
+oldPos = pos;
   Cmd = false;
-  Led(pos);
+  //Led(pos);
 }
 
 void GotoPos(int posDest)
 {
-  if (posDest >= 0 && posDest < 200)
+  if (posDest >= 0 && posDest < 600)
   {
     int chemin1 = posDest - posCour;
     int chemin2;
     if (posDest > posCour)
-    chemin2 = - (posCour + 200 - posDest);
+    chemin2 = - (posCour + 600 - posDest);
     else
-    chemin2 = 200 - posCour + posDest;
+    chemin2 = 600 - posCour + posDest;
 
     int chemin;
     if (abs(chemin1) > abs(chemin2))
@@ -242,7 +243,10 @@ void CheckZero()
 {
   while(!CheckZ)
   {
+    int pos = 0;
     //myMotor->step(1, FORWARD, DOUBLE);
+    pos++;
+    Serial.print(pos);
     Bp_Z.update();
     //Bp0.update();
   }
@@ -258,7 +262,7 @@ void setup()
   //myMotor->setSpeed(10);
 
   // Extinction Led position
-  BkAB_1.start();
+  /*BkAB_1.start();
   BkAB_2.start();
   BkAB_4.start();
   BkC_1.start();
@@ -270,7 +274,7 @@ void setup()
   BkAB_4.off();
   BkC_1.off();
   BkC_2.off();
-  BkC_4.off();
+  BkC_4.off();*/
 
   //Initialisation Bp choix voie
   Bp_AB_1.onPress(AB_1Pressed);
@@ -281,8 +285,10 @@ void setup()
   Bp_C_2.onPress(C_2Pressed);
   Bp_C_4.onPress(C_4Pressed);
 
-  Bp_Z.onPress(Z_Pressed);
+  //Bp_Z.onPress(Z_Pressed);
+
   BpP.onPress(BpP_Pressed);
+  BpM.onPress(bpM_Pressed);
 
   PosW(C_1);
 
@@ -323,7 +329,10 @@ void loop()
     Bp_C_2.update();
     Bp_C_4.update();
 
-    Bp_Z.update();
+    BpP.update();
+    BpM.update();
+
+    //Serial.println(pos);
   }
 
 }
@@ -362,11 +371,22 @@ void Z_Pressed(Button& btn)
 {
 
   CheckZ = true;
-  Serial.println("Bp");
+  //Serial.println("Bp");
   //CheckZ = true;
 }
 
 void BpP_Pressed(Button& btn)
 {
+  Serial.println("Bp Plus: ");
+  Serial.print(pos);
   myMotor->step(1, FORWARD, MICROSTEP);
+  pos++;
+}
+
+void bpM_Pressed(Button& btn)
+{
+  Serial.println("Bp Moins: ");
+  Serial.print(pos);
+  myMotor->step(1,BACKWARD, MICROSTEP);
+  pos--;
 }
