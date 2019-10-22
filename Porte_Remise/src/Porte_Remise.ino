@@ -1,11 +1,11 @@
-/* SCRIPT OUverture Fermeture Portes de la remise du loco;
+/* SCRIPT Ouverture Fermeture Portes de la remise du loco;
 Principe :
 Arduino reçoit un ordre de manoeuvrer les portes. L'ordre est donné soit par l'arduino maître,
 soit par un bouton poussoir sur le shield afin de passer en mode manuel. Pour éviter les perturbations électriques environnantes, l'ordre est un front bas.
 Un poussoir sur le shield permet de réinitialiser le programme, c'est à dire de se positionner en fin de setup.
 
 Séquence :
-A la mst, l'arduino procède à l'initialisation , c'est à dire que les portes sont fermées et la lampe éteinte.
+A la mise sous tensions, l'arduino procède à l'initialisation , c'est à dire que les portes sont fermées et la lampe éteinte.
 L'arduino est alors prêt pour les séquences ouvertures fermetures portes.
 Dès que l'ordre d'ouverture portes est donné :
 la lampe s'allume 2 sec avant la manoeuvre,
@@ -13,13 +13,7 @@ après 2 secondes, la porte de gauche s'ouvre, puis après une tempo de 1 second
 Au prochain ordre, il s'agira de fermer les portes selon la manoeuvre inverse. la lampe s'éteint.
 Porte de gauche quand on regarde la remise depuis l'extérieur.
 
-Accessoires :
-2 ILS qui renvoient un état haut
-une LED bleue pour indiquer l'état prêt, renvoyé vers le panneau de commande général
-une LED verte pour indiquer que les portes sont ouvertes
-une LED rouge pour indiquer que les portes sont fermées ou en court de manoeuvre.
-une LED jaune pour la lampe.
-2 servos
+
 */
 
 //DEFINITIONS
